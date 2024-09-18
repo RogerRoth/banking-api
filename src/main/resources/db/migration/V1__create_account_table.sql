@@ -1,0 +1,8 @@
+CREATE TABLE account (
+  id BIGSERIAL PRIMARY KEY,
+  balance DECIMAL(19,2) NOT NULL CHECK (balance >= 0),
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX id_account_balance ON account(balance);
