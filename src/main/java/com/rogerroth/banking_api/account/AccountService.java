@@ -1,8 +1,14 @@
 package com.rogerroth.banking_api.account;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 import org.springframework.stereotype.Service;
+
+import com.rogerroth.banking_api.account.dtos.CreateAccountBodyDto;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Optional;
 import jakarta.transaction.Transactional;
 
@@ -11,8 +17,12 @@ public class AccountService {
   
   private final AccountRepository accountRepository;
 
-  public AccountService(AccountRepository accountRepository) {
+  private final PasswordEncoder passwordEncoder;
+
+  @Autowired
+  public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
     this.accountRepository = accountRepository;
+    this.passwordEncoder = passwordEncoder;
   }
 
   public AccountEntity getById(Long accountId) {
@@ -24,6 +34,16 @@ public class AccountService {
 
     return accountEntity.get();
   
+  }
+
+  public AccountEntity createAccount(CreateAccountBodyDto createAccountBodyDto){
+    AccountEntity account = AccountEntity.builder()
+      .email(createAccountBodyDto.getEmail())
+      .password(this.passwordEncoder.encode(createAccountBodyDto.getPassword()))
+      .balance(BigDecimal.ZERO)
+      .build();
+
+    return this.accountRepository.save(account);
   }
 
 

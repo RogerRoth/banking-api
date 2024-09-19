@@ -10,3 +10,9 @@ services:
       POSTGRES_PASSWORD: admin
     ports:
       - "5432:5432"
+    networks:
+      - banking-network
+
+networks:
+  banking-network:
+    driver: bridge
